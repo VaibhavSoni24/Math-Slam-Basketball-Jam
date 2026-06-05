@@ -104,7 +104,7 @@ func _build_ui() -> void:
 	_name_input = LineEdit.new()
 	_name_input.text = GameState.player_name
 	_name_input.placeholder_text = "Enter your name…"
-	_name_input.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_name_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_name_input.custom_minimum_size = Vector2(460, 48)
 	_name_input.add_theme_font_size_override("font_size", 20)
 	_name_input.text_changed.connect(_on_name_changed)
