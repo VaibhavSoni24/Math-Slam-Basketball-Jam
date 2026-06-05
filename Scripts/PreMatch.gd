@@ -87,7 +87,10 @@ func _make_player_card(center: Vector2, name_txt: String, emoji: String,
 	style.corner_radius_top_right   = 20
 	style.corner_radius_bottom_left = 20
 	style.corner_radius_bottom_right= 20
-	style.border_width_left = style.border_width_right = style.border_width_top = style.border_width_bottom = 3
+	style.border_width_left   = 3
+	style.border_width_right  = 3
+	style.border_width_top    = 3
+	style.border_width_bottom = 3
 	style.border_color = col
 	style.content_margin_left   = 20
 	style.content_margin_right  = 20
@@ -124,7 +127,6 @@ func _make_player_card(center: Vector2, name_txt: String, emoji: String,
 	vbox.add_child(tier_badge)
 
 func _start_countdown() -> void:
-	GameState.start_new_match()
 	_tick_countdown()
 
 func _tick_countdown() -> void:
