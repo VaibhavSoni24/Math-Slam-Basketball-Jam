@@ -1,3 +1,85 @@
-# Godot 4+ specific ignores
+# =============================================================================
+# Math Slam: Basketball Jam — .gitignore
+# Godot 4.x (GDScript) + Node.js relay server
+# =============================================================================
+
+# ─── Godot editor internals ───────────────────────────────────────────────────
+# Auto-generated cache/metadata — never commit these
 .godot/
-/android/
+
+# Godot import metadata (regenerated on project open)
+*.import
+
+# Godot mono / C# build artifacts (not used here, but future-proof)
+.mono/
+data_*/
+mono_crash.*.json
+
+# ─── Godot export output ──────────────────────────────────────────────────────
+export/
+*.pck
+*.apk
+*.aab
+*.ipa
+*.exe
+*.x86_64
+*.arm64
+
+# ─── Node.js relay server ─────────────────────────────────────────────────────
+server/node_modules/
+server/.env
+
+# Logs
+server/logs/
+server/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── OS generated files ───────────────────────────────────────────────────────
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ─── IDEs & editors ───────────────────────────────────────────────────────────
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (Rider, IntelliJ)
+.idea/
+*.iml
+
+# Vim / Emacs swap files
+*.swp
+*.swo
+*.swn
+*#
+.#*
+
+# ─── Misc ─────────────────────────────────────────────────────────────────────
+# Godot user data (save files generated during local testing)
+# Uncomment if you don't want test save data in the repo:
+# user://
+
+# Python bytecode (if any tooling scripts exist)
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
