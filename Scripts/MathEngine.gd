@@ -131,12 +131,12 @@ func _gen_mvp(rng: SeededRNG) -> Dictionary:
 # ─── Sub-generators ───────────────────────────────────────────────────────────
 
 func _gen_fraction_add(rng: SeededRNG) -> Dictionary:
-	var denoms := [2, 3, 4, 5, 6, 8, 10]
-	var d := denoms[rng.randi_range(0, denoms.size() - 1)]
+	var denoms: Array[int] = [2, 3, 4, 5, 6, 8, 10]
+	var d: int = denoms[rng.randi_range(0, denoms.size() - 1)]
 	var n1 := rng.randi_range(1, d - 1)
 	var n2 := rng.randi_range(1, d - 1)
-	var ans_n := n1 + n2
-	var ans_d := d
+	var ans_n: int = n1 + n2
+	var ans_d: int = d
 	var g := _gcd(ans_n, ans_d)
 	ans_n /= g
 	ans_d /= g
@@ -164,7 +164,7 @@ func _gen_mixed_ops(rng: SeededRNG) -> Dictionary:
 
 # ─── Utilities ────────────────────────────────────────────────────────────────
 
-func _arith(question: String, answer, answer_str: String = "") -> Dictionary:
+func _arith(question: String, answer: Variant, answer_str: String = "") -> Dictionary:
 	var s := answer_str if answer_str != "" else str(answer)
 	return {
 		"question": question,
