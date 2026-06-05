@@ -42,6 +42,7 @@ const SAVE_PATH := "user://mathslam_save.cfg"
 
 # ─── Signals ──────────────────────────────────────────────────────────────────
 signal xp_changed(new_total: int)
+@warning_ignore("UNUSED_SIGNAL")
 signal settings_changed()
 
 # ─── Lifecycle ────────────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@ extends Node
 
 func _ready() -> void:
 	_register_input_actions()
-	get_tree().change_scene_to_file("res://Scenes/MainMenu.tscn")
+	get_tree().change_scene_to_file.call_deferred("res://Scenes/MainMenu.tscn")
 
 func _register_input_actions() -> void:
 	if not InputMap.has_action("shoot_ball"):

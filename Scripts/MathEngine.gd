@@ -25,8 +25,8 @@ class SeededRNG:
 
 ## Generate a problem dictionary from seed + tier.
 ## Returns: { question, answer, answer_str, display_type, [fraction_data] }
-func generate(seed: int, tier: String = "pro") -> Dictionary:
-	var rng := SeededRNG.new(seed)
+func generate(problem_seed: int, tier: String = "pro") -> Dictionary:
+	var rng := SeededRNG.new(problem_seed)
 	match tier.to_lower():
 		"rookie":   return _gen_rookie(rng)
 		"varsity":  return _gen_varsity(rng)

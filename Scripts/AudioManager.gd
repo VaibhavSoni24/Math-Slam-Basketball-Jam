@@ -6,7 +6,6 @@ const SAMPLE_RATE := 22050
 
 var _sfx_cache: Dictionary = {}
 var _music_player: AudioStreamPlayer
-var _sfx_bus: String = "Master"
 
 # ─── Lifecycle ────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -23,13 +22,13 @@ func _apply_volumes() -> void:
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), linear_to_db(sv))
 
 # ─── Public API ───────────────────────────────────────────────────────────────
-func play_sfx(name: String) -> void:
-	if not _sfx_cache.has(name):
-		push_warning("[AudioManager] Unknown sfx: " + name)
+func play_sfx(sfx_name: String) -> void:
+	if not _sfx_cache.has(sfx_name):
+		push_warning("[AudioManager] Unknown sfx: " + sfx_name)
 		return
 	var p := AudioStreamPlayer.new()
 	add_child(p)
-	p.stream = _sfx_cache[name]
+	p.stream = _sfx_cache[sfx_name]
 	p.volume_db = linear_to_db(GameState.settings.get("sfx_volume", 1.0))
 	p.play()
 	p.finished.connect(p.queue_free)

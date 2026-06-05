@@ -233,9 +233,9 @@ func _select_tier(tier: String) -> void:
 	_refresh_tier_selection()
 
 func _refresh_tier_selection() -> void:
-	for tier_key in _tier_btns:
+	for tier_key: String in _tier_btns:
 		var btn: Button = _tier_btns[tier_key]
-		var active := (tier_key == GameState.current_tier)
+		var active: bool = (tier_key == GameState.current_tier)
 		var col := C_ORANGE if tier_key == "pro" else C_BLUE
 		_apply_btn_style(btn, col if active else col.darkened(0.4))
 
