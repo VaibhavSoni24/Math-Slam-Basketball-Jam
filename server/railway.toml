@@ -1,0 +1,13 @@
+# Math Slam Basketball Jam — WebSocket Relay Server
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node server.js"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[[services]]
+name = "mathslam-relay"
+source = "."
