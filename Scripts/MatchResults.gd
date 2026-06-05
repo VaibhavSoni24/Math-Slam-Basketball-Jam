@@ -179,7 +179,7 @@ func _make_score_block(parent: HBoxContainer, name_txt: String,
 func _make_stats_row(parent: VBoxContainer) -> void:
 	var accuracy_pct := int(GameState.get_accuracy() * 100.0)
 	var fastest_s    := "%.1fs" % (GameState.fastest_time_ms / 1000.0) \
-					    if GameState.fastest_time_ms < INF else "N/A"
+						if GameState.fastest_time_ms < INF else "N/A"
 
 	var grid := GridContainer.new()
 	grid.columns = 2

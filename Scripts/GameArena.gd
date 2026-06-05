@@ -65,7 +65,6 @@ var _cpu_think_time: float = 0.0
 var _cpu_timer: float = 0.0
 
 # ─── Ball animation ───────────────────────────────────────────────────────────
-var _ball_pos := Vector2(200, 520)
 var _ball_anim_t: float = -1.0  # -1 = idle
 var _ball_start: Vector2
 var _ball_peak: Vector2
@@ -449,6 +448,7 @@ func _connect_network_signals() -> void:
 # MATCH START
 # ─────────────────────────────────────────────────────────────────────────────
 func _begin_match() -> void:
+	GameState.start_new_match()
 	if GameState.game_mode == "solo":
 		_start_solo_round()
 	else:
@@ -460,15 +460,15 @@ func _begin_match() -> void:
 # ROUND MANAGEMENT
 # ─────────────────────────────────────────────────────────────────────────────
 func _on_round_start(data: Dictionary) -> void:
-	var seed: int  = data.get("problem_seed", 42)
+	var problem_seed: int = data.get("problem_seed", 42)
 	var round_num: int = data.get("round_number", 1)
-	_start_round(seed, round_num)
+	_start_round(problem_seed, round_num)
 
 func _start_solo_round() -> void:
 	GameState.round_number += 1
-	var seed := randi()
+	var problem_seed := randi()
 	var round_num := GameState.round_number
-	_start_round(seed, round_num)
+	_start_round(problem_seed, round_num)
 	# Schedule CPU answer
 	var cpu_delay: float
 	match GameState.current_tier:
@@ -479,9 +479,9 @@ func _start_solo_round() -> void:
 	_cpu_think_time = cpu_delay
 	_cpu_timer = 0.0
 
-func _start_round(seed: int, round_num: int) -> void:
+func _start_round(problem_seed: int, round_num: int) -> void:
 	GameState.round_number = round_num
-	GameState.current_problem = MathEngine.generate(seed, GameState.current_tier)
+	GameState.current_problem = MathEngine.generate(problem_seed, GameState.current_tier)
 	GameState.has_possession   = false
 	_hint_shown = false
 	_round_timer = ROUND_TIME
@@ -547,7 +547,7 @@ func _handle_solo_answer(answer: String) -> void:
 	if MathEngine.validate(answer, GameState.current_problem):
 		GameState.correct_count += 1
 		GameState.consecutive_first_answers += 1
-		var elapsed := GameState.stop_answer_timer()
+		var _elapsed := GameState.stop_answer_timer()
 		_answer_input.editable = false
 		_cpu_timer = 9999.0  # cancel CPU
 		_grant_possession_to(1)  # player always wins in solo if correct
@@ -571,7 +571,7 @@ func _show_wrong_feedback() -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 func _on_answer_result(data: Dictionary) -> void:
 	var winner_id: String = data.get("winner_id", "")
-	var correct_answer: String = str(data.get("correct_answer", ""))
+	var _correct_answer: String = str(data.get("correct_answer", ""))
 	var is_my_win := (winner_id == NetworkManager.get_player_id())
 
 	if is_my_win:
@@ -675,7 +675,7 @@ func _resolve_solo_shot(power: float) -> void:
 func _on_shot_result(data: Dictionary) -> void:
 	var scored: bool  = data.get("scored", false)
 	var power: float  = data.get("power", 0.5)
-	var pts: int      = data.get("points_awarded", 0)
+	var _pts: int = data.get("points_awarded", 0)
 	_animate_shot(power, scored)
 
 func _on_score_update(data: Dictionary) -> void:
@@ -702,6 +702,8 @@ func _animate_shot(power: float, scored: bool) -> void:
 # ROUND END
 # ─────────────────────────────────────────────────────────────────────────────
 func _end_round() -> void:
+	if _state == State.ROUND_END or _state == State.MATCH_END:
+		return
 	_set_state(State.ROUND_END)
 	_show_round_overlay()
 
@@ -723,6 +725,8 @@ func _show_round_overlay() -> void:
 	_overlay_panel.visible = true
 
 	await get_tree().create_timer(ROUND_END_PAUSE).timeout
+	if not is_inside_tree():
+		return
 	_overlay_panel.visible = false
 
 	if GameState.round_number >= GameState.max_rounds:
@@ -742,6 +746,8 @@ func _update_score_display() -> void:
 			tw.tween_property(lbl, "scale", Vector2(1.0, 1.0), 0.2)
 
 func _finish_match() -> void:
+	if _state == State.MATCH_END:
+		return
 	_set_state(State.MATCH_END)
 	GameState.add_xp(GameState.compute_match_xp())
 	if GameState.did_i_win():
@@ -750,7 +756,8 @@ func _finish_match() -> void:
 		GameState.win_streak = 0
 	GameState.save_persistent()
 	AudioManager.stop_music()
-	get_tree().change_scene_to_file("res://Scenes/MatchResults.tscn")
+	if is_inside_tree():
+		get_tree().change_scene_to_file("res://Scenes/MatchResults.tscn")
 
 func _on_match_end(data: Dictionary) -> void:
 	GameState.p1_score = data.get("final_scores", {}).get("p1", GameState.p1_score)
@@ -863,12 +870,14 @@ func _cpu_answers() -> void:
 	_grant_possession_to(2)
 	# CPU auto-shoots with 70% accuracy simulation
 	await get_tree().create_timer(0.8).timeout
+	if not is_inside_tree() or _state == State.MATCH_END:
+		return
 	var cpu_power := 0.0
 	if randf() < 0.70:
 		cpu_power = randf_range(0.65, 0.95)  # makes it
 	else:
 		cpu_power = randf_range(0.0, 0.38)  # misses
-	_resolve_solo_shot(cpu_power)  # uses p2 perspective — handled in resolve
+	_resolve_solo_shot(cpu_power)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # HELPERS
@@ -880,6 +889,6 @@ func _make_emoji(emoji: String, sz: int, pos: Vector2) -> Label:
 	var l := Label.new()
 	l.text = emoji
 	l.add_theme_font_size_override("font_size", sz)
-	l.position = pos - Vector2(sz / 2, sz / 2)
+	l.position = pos - Vector2(float(sz) / 2.0, float(sz) / 2.0)
 	add_child(l)
 	return l
