@@ -322,7 +322,7 @@ func _build_input_area() -> void:
 	_answer_input.placeholder_text = "Answer here… (Enter to submit)"
 	_answer_input.size  = Vector2(640, 58)
 	_answer_input.position = Vector2(320, 638)
-	_answer_input.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_answer_input.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_answer_input.add_theme_font_size_override("font_size", 32)
 	_apply_lineedit_style(_answer_input)
 	_answer_input.text_submitted.connect(_on_answer_submitted)
@@ -345,7 +345,10 @@ func _apply_lineedit_style(le: LineEdit) -> void:
 	s.corner_radius_top_right   = 10
 	s.corner_radius_bottom_left = 10
 	s.corner_radius_bottom_right= 10
-	s.border_width_left = s.border_width_right = s.border_width_top = s.border_width_bottom = 2
+	s.border_width_left   = 2
+	s.border_width_right  = 2
+	s.border_width_top    = 2
+	s.border_width_bottom = 2
 	s.border_color = C_BLUE
 	le.add_theme_stylebox_override("normal", s)
 	le.add_theme_color_override("font_color", C_TEXT)

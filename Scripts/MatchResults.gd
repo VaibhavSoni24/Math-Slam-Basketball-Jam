@@ -144,7 +144,10 @@ func _make_card() -> PanelContainer:
 	s.corner_radius_top_right   = 24
 	s.corner_radius_bottom_left = 24
 	s.corner_radius_bottom_right= 24
-	s.border_width_left = s.border_width_right = s.border_width_top = s.border_width_bottom = 2
+	s.border_width_left   = 2
+	s.border_width_right  = 2
+	s.border_width_top    = 2
+	s.border_width_bottom = 2
 	s.border_color = Color(C_GOLD.r, C_GOLD.g, C_GOLD.b, 0.5)
 	s.content_margin_left   = 40
 	s.content_margin_right  = 40
@@ -208,7 +211,10 @@ func _make_btn(txt: String, col: Color) -> Button:
 	btn.add_theme_color_override("font_color", Color.WHITE)
 	var n := StyleBoxFlat.new()
 	n.bg_color = col
-	n.corner_radius_top_left = n.corner_radius_top_right = n.corner_radius_bottom_left = n.corner_radius_bottom_right = 12
+	n.corner_radius_top_left     = 12
+	n.corner_radius_top_right    = 12
+	n.corner_radius_bottom_left  = 12
+	n.corner_radius_bottom_right = 12
 	var h := n.duplicate(); h.bg_color = col.lightened(0.18)
 	var p := n.duplicate(); p.bg_color = col.darkened(0.22)
 	btn.add_theme_stylebox_override("normal", n)
