@@ -95,8 +95,8 @@ func _build_ui() -> void:
 	# Personal best
 	if GameState.fastest_time_ms < INF:
 		var pb_key := GameState.current_tier
-		var is_new_best := not GameState.personal_bests.has(pb_key) or \
-						   GameState.fastest_time_ms <= GameState.personal_bests.get(pb_key, INF)
+		var is_new_best: bool = not GameState.personal_bests.has(pb_key) or \
+							   GameState.fastest_time_ms <= (GameState.personal_bests.get(pb_key, INF) as float)
 		if is_new_best:
 			var pb_lbl := Label.new()
 			pb_lbl.text = "⚡ NEW PERSONAL BEST! %.1fs" % (GameState.fastest_time_ms / 1000.0)
