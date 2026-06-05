@@ -72,7 +72,7 @@ func _build_sfx_cache() -> void:
 # ─── Waveform helpers ─────────────────────────────────────────────────────────
 
 func _gen_tone_env(freq: float, dur: float, shape: String,
-				   env_times: Array, env_vals: Array) -> AudioStreamWAV:
+				   env_times: Array[float], env_vals: Array[float]) -> AudioStreamWAV:
 	var n := int(SAMPLE_RATE * dur)
 	var data := PackedByteArray()
 	data.resize(n * 2)
@@ -114,7 +114,7 @@ func _gen_sweep(f0: float, f1: float, dur: float) -> AudioStreamWAV:
 
 func _gen_fanfare() -> AudioStreamWAV:
 	# C–E–G–C' arpeggio
-	var note_freqs: Array = [523.25, 659.25, 783.99, 1046.50]
+	var note_freqs: Array[float] = [523.25, 659.25, 783.99, 1046.50]
 	var note_dur := 0.13
 	var total := note_dur * note_freqs.size()
 	var n := int(SAMPLE_RATE * total)
@@ -140,7 +140,7 @@ func _gen_menu_music() -> AudioStreamWAV:
 	var bpm := 110.0
 	var beat := 60.0 / bpm
 	# Pentatonic scale C4
-	var notes: Array = [523.25, 659.25, 783.99, 880.0, 1046.50, 880.0, 783.99, 659.25]
+	var notes: Array[float] = [523.25, 659.25, 783.99, 880.0, 1046.50, 880.0, 783.99, 659.25]
 	var total := beat * notes.size()
 	var n := int(SAMPLE_RATE * total)
 	var data := PackedByteArray()
@@ -167,7 +167,7 @@ func _gen_menu_music() -> AudioStreamWAV:
 func _gen_game_music() -> AudioStreamWAV:
 	var bpm := 140.0
 	var beat := 60.0 / bpm
-	var notes: Array = [783.99, 880.0, 783.99, 659.25, 783.99, 880.0, 1046.50, 880.0]
+	var notes: Array[float] = [783.99, 880.0, 783.99, 659.25, 783.99, 880.0, 1046.50, 880.0]
 	var total := beat * notes.size()
 	var n := int(SAMPLE_RATE * total)
 	var data := PackedByteArray()
@@ -201,13 +201,13 @@ func _make_wav(data: PackedByteArray) -> AudioStreamWAV:
 	wav.data = data
 	return wav
 
-func _sample_envelope(t_norm: float, times: Array, vals: Array) -> float:
+func _sample_envelope(t_norm: float, times: Array[float], vals: Array[float]) -> float:
 	# t_norm is 0..1 within total duration
 	if times.is_empty(): return 1.0
 	if t_norm <= times[0]: return vals[0]
 	if t_norm >= times[-1]: return vals[-1]
 	for i in range(1, times.size()):
 		if t_norm <= times[i]:
-			var seg := (t_norm - times[i-1]) / (times[i] - times[i-1])
+			var seg: float = (t_norm - times[i-1]) / (times[i] - times[i-1])
 			return lerpf(vals[i-1], vals[i], seg)
 	return vals[-1]
